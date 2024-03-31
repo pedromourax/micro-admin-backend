@@ -22,4 +22,24 @@ export class AppService {
       throw new RpcException(error.message)
     }
   }
+
+
+  async consultarCategoriaPeloID(idCategoria: string) {
+    try {
+      console.log(`id: ${idCategoria}`)
+      return await this.CategoriasModel.findOne({ _id: idCategoria }).exec()
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      throw new RpcException(error.message)
+    }
+  }
+
+  async consultarCategorias() {
+    try {
+      return await this.CategoriasModel.find().exec()
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      throw new RpcException(error.message)
+    }
+  }
 }
