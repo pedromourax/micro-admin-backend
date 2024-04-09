@@ -42,4 +42,17 @@ export class AppService {
       throw new RpcException(error.message)
     }
   }
+
+  async atualizarCategoria(_id: string, categoria: Categoria): Promise<void> {
+    try {
+      console.log(categoria)
+      const categoriaAtualizada = await this.CategoriasModel.findOneAndUpdate({ _id }, { $set: categoria }).exec()
+      console.log(categoriaAtualizada)
+    } catch (error) {
+      this.logger.error(`Error: ${JSON.stringify(error.message)}`)
+      throw new RpcException(error.message)
+    }
+  }
+
+
 }
