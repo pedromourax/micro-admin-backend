@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { JogadorSchema } from './interfaces/jogadores/jogador.schema';
-import { CategoriaSchema } from './interfaces/categorias/categoria.schema';
+import { CategoriasModule } from './categorias/categorias.module';
+import { JogadoresModule } from './jogadores/jogadores.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://kegivaldo000:aiKNRP8OLKULdltn@cluster0.8njalqq.mongodb.net/sradmbackend?retryWrites=true&w=majority'),
-    MongooseModule.forFeature([{ name: 'Jogador', schema: JogadorSchema }, { name: 'Categoria', schema: CategoriaSchema }]),
+    CategoriasModule,
+    JogadoresModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule { }
