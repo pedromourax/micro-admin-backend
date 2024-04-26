@@ -33,10 +33,8 @@ export class JogadoresController {
 
     @MessagePattern('consultar-jogadores')
     async consultarJogadores(@Payload() _id: string, @Ctx() context: RmqContext) {
-
         const channel = context.getChannelRef()
         const originalMsg = context.getMessage()
-
         this.logger.log(`Consultar jogador: ${JSON.stringify(_id)}`)
         try {
 
@@ -52,7 +50,45 @@ export class JogadoresController {
 
     }
 
+    // TODO: controller - atualizar e deletar jogador
 
+    @EventPattern('atualizar-jogador')
+    async atualizarJogador(@Payload() data: any, @Ctx() context: RmqContext) {
+
+        const channel = context.getChannelRef()
+        const originalMsg = context.getMessage()
+
+        this.logger.log(`Atualizar jogador: ${JSON.stringify(data)}`)
+
+        try {
+
+            const { idJogador, ...jogador } = data
+            await this.jogadoresService.atualizarJogador(idJogador, jogador)
+            await channel.ack(originalMsg)
+
+        } catch (error) {
+            this.logger.log(`Error: ${JSON.stringify(error.message)}`)
+
+            const errors = ackErrors.filter(ackError => error.message.includes(ackError))
+            if (errors) await channel.ack(originalMsg)
+        }
+
+    }
+
+    @EventPattern('deletar-jogador')
+    async deletarJogador(@Payload() _id: string, @Ctx() context: RmqContext) {
+
+        const channel = context.getChannelRef()
+        const originalMsg = context.getMessage()
+
+        try {
+            await this.jogadoresService.deletarJogador(_id)
+            await channel.ack(originalMsg)
+        } catch (error) {
+            this.logger.log(`Error: ${JSON.stringify(error.message)}`)
+            await channel.ack(originalMsg)
+        }
+    }
 
 
 }
