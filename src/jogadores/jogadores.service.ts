@@ -23,6 +23,7 @@ export class JogadoresService {
 
     async consultarTodosJogadores(): Promise<Jogador[]> {
         try {
+            console.log("consultado todos os jogadores")
             return await this.jogadorModel.find().exec()
         } catch (error) {
             this.logger.error(`Error: ${JSON.stringify(error.message)}`)
@@ -32,16 +33,17 @@ export class JogadoresService {
 
     async consultarJogadorPeloId(idJogador: string): Promise<Jogador> {
         try {
-            return await this.jogadorModel.findOne({ _id: idJogador }).exec()
+            return await this.jogadorModel.findOne({ _id: idJogador }).select('_id').exec()
         } catch (error) {
             this.logger.error(`Error: ${JSON.stringify(error.message)}`)
-            throw new RpcException(error.message)
+            throw new RpcException("Jogador não encontrado")
         }
     }
 
-    async atualizarJogador(_id: string, atualizarJogadorDto: Jogador): Promise<void> {
+    async atualizarJogador(_id: string, atualizarJogadorDto: Jogador): Promise<Jogador> {
         try {
-            await this.jogadorModel.findOneAndUpdate({ _id }, { $set: atualizarJogadorDto }).exec()
+
+            return await this.jogadorModel.findOneAndUpdate({ _id }, { $set: atualizarJogadorDto }).exec()
         } catch (error) {
             this.logger.error(`Error: ${JSON.stringify(error.message)}`)
             throw new RpcException(error.message)
