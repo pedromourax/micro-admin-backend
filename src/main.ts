@@ -15,7 +15,7 @@ async function bootstrap() {
       queue: 'admin-backend'
     },
   });
-  logger.log('Microservice is listening')
+  logger.log('Microservice is listening test')
 
   await app.listen();
 }
